@@ -1,0 +1,211 @@
+# RGB-D Camera Configuration Example
+# This configuration file defines parameters for a simulated RGB-D camera sensor
+# Compatible with Gazebo and ROS-based robotics simulation
+# Example: Intel RealSense D435 equivalent
+
+sensor_type: "depth"
+sensor_model: "D435"  # Example: Intel RealSense D435 equivalent
+
+# General parameters
+name: "rgbd_camera"
+namespace: "camera"
+update_rate: 30.0  # Hz
+
+# Camera intrinsic parameters
+camera_info:
+  width: 640           # Image width in pixels
+  height: 480          # Image height in pixels
+  distortion_model: "plumb_bob"  # Distortion model
+
+  # Camera matrix (intrinsic parameters)
+  camera_matrix:
+    rows: 3
+    cols: 3
+    data: [525.0, 0.0, 319.5,    # fx, 0,  cx
+           0.0, 525.0, 239.5,    # 0, fy, cy
+           0.0, 0.0, 1.0]        # 0, 0,  1
+
+  # Distortion coefficients [k1, k2, t1, t2, k3]
+  distortion_coefficients:
+    rows: 1
+    cols: 5
+    data: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+# Depth sensor parameters
+depth:
+  near: 0.1            # Near clipping distance (meters)
+  far: 10.0            # Far clipping distance (meters)
+  unit: "meter"        # Depth unit
+
+# Image parameters
+image:
+  format: "R8G8B8"     # RGB8 format
+  width: 640           # Image width
+  height: 480          # Image height
+
+# Noise parameters for realistic simulation
+noise:
+  rgb:
+    type: "gaussian"
+    mean: 0.0
+    stddev: 0.01       # Small amount of noise for realism
+  depth:
+    type: "gaussian"
+    mean: 0.0
+    stddev: 0.005      # 5mm standard deviation for depth noise
+    # Depth noise increases with distance (in RealSense: noise ~ 0.001*depth + 0.001)
+    distance_coefficient: 0.001  # Additional noise proportional to depth
+    constant_offset: 0.001       # Constant depth offset
+
+# Gazebo plugin configuration
+plugin:
+  type: "libgazebo_ros_openni_kinect.so"
+  name: "gazebo_camera_controller"
+
+  # ROS-specific parameters
+  ros:
+    # Topic names
+    rgb_image_topic_name: "/camera/rgb/image_raw"
+    depth_image_topic_name: "/camera/depth/image_raw"
+    depth_image_camera_info_topic_name: "/camera/depth/camera_info"
+    rgb_camera_info_topic_name: "/camera/rgb/camera_info"
+    point_cloud_topic_name: "/camera/depth/points"
+    projector_info_topic_name: "/camera/projector_info"
+
+    # Frame names
+    frame_name: "camera_link"
+    camera_name: "camera"
+
+  # Camera-specific parameters
+  update_rate: 30.0
+  baseline: 0.075        # Stereo baseline (meters)
+  distortion_k1: 0.0     # Radial distortion coefficient
+  distortion_k2: 0.0     # Radial distortion coefficient
+  distortion_k3: 0.0     # Radial distortion coefficient
+  distortion_t1: 0.0     # Tangential distortion coefficient
+  distortion_t2: 0.0     # Tangential distortion coefficient
+
+  # Point cloud generation parameters
+  point_cloud_cutoff: 0.1        # Minimum depth for point cloud (m)
+  point_cloud_cutoff_max: 5.0    # Maximum depth for point cloud (m)
+  point_cloud_update_rate: 10    # Point cloud update rate (Hz)
+
+  # Noise parameters
+  gaussian_noise: 0.05           # Overall noise level
+  random_walk: 0.0               # Random walk parameter
+  bias_correlation_time: 60.0    # Bias correlation time (s)
+  bias_stability: 0.01           # Bias stability
+
+# Physical mounting parameters
+mounting:
+  position: [0.15, 0.0, 0.25]    # [x, y, z] in robot frame (meters)
+  orientation: [0.0, 0.0, 0.0]   # [roll, pitch, yaw] in robot frame (radians)
+
+# Performance parameters
+performance:
+  max_resolution: [1920, 1080]   # Maximum supported resolution
+  compression: "none"            # Image compression method
+  bandwidth_limit: 100.0         # Bandwidth limit (MB/s)
+
+# Data processing parameters
+data_processing:
+  rgb_topic: "/camera/rgb/image_raw"
+  depth_topic: "/camera/depth/image_raw"
+  camera_info_topic: "/camera/rgb/camera_info"
+  point_cloud_topic: "/camera/depth/points"
+  use_depth_registration: true   # Align depth to RGB frame
+  depth_frame_id: "camera_depth_frame"
+  color_frame_id: "camera_rgb_frame"
+
+# Calibration parameters
+calibration:
+  # Intrinsic calibration parameters
+  focal_length_x: 525.0          # Focal length in x direction (pixels)
+  focal_length_y: 525.0          # Focal length in y direction (pixels)
+  principal_point_x: 319.5       # Principal point x (pixels)
+  principal_point_y: 239.5       # Principal point y (pixels)
+
+  # Extrinsic calibration (relative to base link)
+  extrinsic_transforms:
+    base_link: [0.15, 0.0, 0.25, 0.0, 0.0, 0.0]  # [x, y, z, roll, pitch, yaw]
+    lidar_frame: [0.05, 0.0, 0.1, 0.0, 0.0, 0.0] # Transform to LiDAR frame
+    imu_frame: [0.0, 0.0, 0.15, 0.0, 0.0, 0.0]   # Transform to IMU frame
+
+# Validation parameters
+validation:
+  # Expected performance characteristics
+  expected_fov_horizontal: 62.0    # Horizontal field of view (degrees)
+  expected_fov_vertical: 48.5      # Vertical field of view (degrees)
+  expected_resolution: [640, 480]  # Expected resolution
+  expected_depth_accuracy: 0.001   # Expected depth accuracy at 1m (meters)
+  expected_frame_rate: 30.0        # Expected frame rate (Hz)
+
+# Simulation-specific overrides
+simulation:
+  # Additional parameters specifically for simulation
+  resolution_multiplier: 1.0       # Adjust resolution for performance vs quality
+  update_rate_multiplier: 1.0      # Adjust update rate for performance
+  noise_multiplier: 1.0            # Adjust noise level for realism vs performance
+  visualization_enabled: true      # Enable/disable sensor visualization
+
+# Compatibility settings
+compatibility:
+  ros_version: "noetic"            # ROS version compatibility
+  gazebo_version: "11"             # Gazebo version compatibility
+  sensor_msgs_version: "3.0"       # Sensor messages version compatibility
+
+# Quality of service settings (for ROS 2)
+qos:
+  sensor_data:
+    reliability: "reliable"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 5
+
+# Additional sensor properties
+properties:
+  manufacturer: "Intel"
+  model_number: "RealSense D435"
+  weight: 0.061                    # Weight in kg
+  power_consumption: 1.6           # Power consumption in watts
+  operating_temperature_range: [0, 40]  # Operating temperature range (°C)
+  storage_temperature_range: [-20, 60]  # Storage temperature range (°C)
+  protection_rating: "IP52"        # Ingress protection rating
+  minimum_depth_distance: 0.1      # Minimum measurable distance (m)
+  maximum_depth_distance: 10.0     # Maximum measurable distance (m)
+  depth_accuracy: "1%"             # Depth accuracy as percentage of distance
+
+# Advanced features
+advanced_features:
+  ir_emitter_enabled: true         # Enable IR emitter for better depth in low light
+  auto_exposure_enabled: true      # Enable auto exposure
+  auto_white_balance_enabled: true # Enable auto white balance
+  depth_precision: "MM16"          # Depth precision format
+  color_format: "RGB888"           # Color format
+
+# Quality of service for different data streams
+stream_qos:
+  rgb_stream:
+    reliability: "best_effort"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 1
+  depth_stream:
+    reliability: "best_effort"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 1
+  point_cloud:
+    reliability: "reliable"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 1
+
+# Implementation notes
+implementation_notes:
+  - "This configuration simulates an Intel RealSense D435 RGB-D camera"
+  - "Adjust intrinsic parameters based on actual camera calibration"
+  - "Modify noise parameters to match real camera characteristics"
+  - "Update mounting parameters based on robot design"
+  - "Validate depth range parameters for specific application"
+  - "Consider using compressed image transport for bandwidth efficiency"

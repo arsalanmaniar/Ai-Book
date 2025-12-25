@@ -1,0 +1,336 @@
+# Simulation Interface Contracts: Module 2 "The Digital Twin (Gazebo & Unity)"
+
+## Overview
+This document defines the interface contracts for simulation components in Module 2. These contracts describe the communication interfaces between different simulation elements and with the ROS 2 ecosystem.
+
+## Gazebo Services
+
+### Service: SpawnEntity
+**Purpose**: Spawn a new entity (robot or object) in the Gazebo simulation
+
+**Request**:
+```yaml
+# Name of the entity to spawn
+name: string
+# Initial pose in the world
+initial_pose:
+  position:
+    x: float64
+    y: float64
+    z: float64
+  orientation:
+    x: float64
+    y: float64
+    z: float64
+    w: float64
+# Model description (URDF or SDF)
+entity_xml: string
+# Reference frame for the pose
+reference_frame: string
+```
+
+**Response**:
+```yaml
+# Success status
+success: bool
+# Error message if success is false
+status_message: string
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+### Service: DeleteEntity
+**Purpose**: Remove an entity from the simulation
+
+**Request**:
+```yaml
+# Name of the entity to delete
+name: string
+```
+
+**Response**:
+```yaml
+# Success status
+success: bool
+# Error message if success is false
+status_message: string
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+## Simulation Topics
+
+### Topic: /clock
+**Purpose**: Publish simulation time for time synchronization
+
+**Message Type**: builtin_interfaces/Time
+
+**Message Definition**:
+```yaml
+# Simulation time in seconds and nanoseconds
+sec: int32
+nanosec: uint32
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Transient Local (latched)
+- History: Keep last 1
+- Rate: 100 Hz
+
+### Topic: Sensor Data Topics
+
+#### Topic: /robot1/laser_scan
+**Purpose**: Publish LiDAR scan data from the simulated robot
+
+**Message Type**: sensor_msgs/LaserScan
+
+**Message Definition**:
+```yaml
+# Header with timestamp and frame ID
+header:
+  stamp:
+    sec: int32
+    nanosec: uint32
+  frame_id: string
+# Time between measurements
+angle_min: float32  # Start angle of the scan [rad]
+angle_max: float32  # End angle of the scan [rad]
+angle_increment: float32  # Angular distance between measurements [rad]
+time_increment: float32  # Time between measurements [seconds]
+scan_time: float32  # Time between scans [seconds]
+range_min: float32  # Minimum range value [m]
+range_max: float32  # Maximum range value [m]
+ranges: float32[]  # Range data [m]
+intensities: float32[]  # Intensity data [device dependent units]
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 10
+- Rate: 10 Hz
+
+#### Topic: /robot1/depth_camera/depth/image_raw
+**Purpose**: Publish depth image data from simulated depth camera
+
+**Message Type**: sensor_msgs/Image
+
+**Message Definition**:
+```yaml
+# Header with timestamp and frame ID
+header:
+  stamp:
+    sec: int32
+    nanosec: uint32
+  frame_id: string
+# Image dimensions and format
+height: uint32
+width: uint32
+encoding: string  # "32FC1" for depth images
+is_bigendian: uint8
+step: uint32
+data: uint8[]  # Image data in bytes
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 1
+- Rate: 30 Hz
+
+#### Topic: /robot1/imu/data
+**Purpose**: Publish IMU data from simulated inertial measurement unit
+
+**Message Type**: sensor_msgs/Imu
+
+**Message Definition**:
+```yaml
+# Header with timestamp and frame ID
+header:
+  stamp:
+    sec: int32
+    nanosec: uint32
+  frame_id: string
+# Orientation (quaternion)
+orientation:
+  x: float64
+  y: float64
+  z: float64
+  w: float64
+# Covariance for orientation (set to 0 if unknown)
+orientation_covariance: float64[9]
+# Angular velocity
+angular_velocity:
+  x: float64
+  y: float64
+  z: float64
+# Covariance for angular velocity
+angular_velocity_covariance: float64[9]
+# Linear acceleration
+linear_acceleration:
+  x: float64
+  y: float64
+  z: float64
+# Covariance for linear acceleration
+linear_acceleration_covariance: float64[9]
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 10
+- Rate: 100 Hz
+
+### Topic: /robot1/joint_states
+**Purpose**: Publish joint position, velocity, and effort for the robot
+
+**Message Type**: sensor_msgs/JointState
+
+**Message Definition**:
+```yaml
+# Header with timestamp and frame ID
+header:
+  stamp:
+    sec: int32
+    nanosec: uint32
+  frame_id: string
+# Joint names
+name: string[]
+# Joint positions [rad]
+position: float64[]
+# Joint velocities [rad/s]
+velocity: float64[]
+# Joint efforts [Nm]
+effort: float64[]
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 20
+- Rate: 50 Hz
+
+## Unity Integration Services
+
+### Service: UnitySetRobotPose
+**Purpose**: Set the pose of a robot in Unity for visualization
+
+**Request**:
+```yaml
+# Robot identifier
+robot_name: string
+# Target pose
+pose:
+  position:
+    x: float64
+    y: float64
+    z: float64
+  rotation:
+    x: float64
+    y: float64
+    z: float64
+    w: float64
+# Time stamp
+timestamp:
+  sec: int32
+  nanosec: uint32
+```
+
+**Response**:
+```yaml
+# Success status
+success: bool
+# Error message if success is false
+error_message: string
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+### Topic: UnityRobotVisualization
+**Purpose**: Publish robot visualization data to Unity
+
+**Message Type**: Custom visualization_msgs/RobotVisualization
+
+**Message Definition**:
+```yaml
+# Header with timestamp and frame ID
+header:
+  stamp:
+    sec: int32
+    nanosec: uint32
+  frame_id: string
+# Robot identifier
+robot_name: string
+# Robot pose
+pose:
+  position:
+    x: float64
+    y: float64
+    z: float64
+  rotation:
+    x: float64
+    y: float64
+    z: float64
+    w: float64
+# Joint angles for articulated visualization
+joint_names: string[]
+joint_positions: float64[]
+# Sensor visualization data
+sensor_visualization: SensorVisualization[]
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 5
+- Rate: 30 Hz
+
+## Simulation Control Actions
+
+### Action: ExecuteSimulationCommand
+**Purpose**: Execute complex simulation commands with feedback
+
+**Goal**:
+```yaml
+# Command type
+command_type: string  # "move_robot", "change_environment", "start_experiment", etc.
+# Command parameters
+parameters: string  # JSON string with command-specific parameters
+# Timeout for the command
+timeout_sec: int32
+```
+
+**Result**:
+```yaml
+# Success status
+success: bool
+# Result message
+result_message: string
+# Execution statistics
+execution_time: float64
+```
+
+**Feedback**:
+```yaml
+# Current status of the command execution
+status: string  # "executing", "paused", "error", etc.
+# Progress percentage (0-100)
+progress: int32
+# Current state description
+state_description: string
+```
+
+**QoS Profile**:
+- Goal: Reliable
+- Result: Reliable
+- Feedback: Best effort

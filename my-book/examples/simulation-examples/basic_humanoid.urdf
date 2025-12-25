@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<robot name="basic_humanoid">
+  <!-- Base link representing the torso -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.3 0.3 0.6"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.3 0.3 0.6"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="10.0"/>
+      <inertia ixx="0.5" ixy="0.0" ixz="0.0" iyy="0.5" iyz="0.0" izz="0.5"/>
+    </inertial>
+  </link>
+
+  <!-- Head -->
+  <link name="head">
+    <visual>
+      <geometry>
+        <sphere radius="0.15"/>
+      </geometry>
+      <material name="skin">
+        <color rgba="0.8 0.6 0.4 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.15"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.02" iyz="0.0" izz="0.02"/>
+    </inertial>
+  </link>
+
+  <!-- Neck joint -->
+  <joint name="neck_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="head"/>
+    <origin xyz="0 0 0.45"/>
+  </joint>
+
+  <!-- Left upper arm -->
+  <link name="left_upper_arm">
+    <visual>
+      <geometry>
+        <cylinder length="0.4" radius="0.05"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.4" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Left shoulder joint -->
+  <joint name="left_shoulder_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_upper_arm"/>
+    <origin xyz="0.2 0 0.1" rpy="0 0 1.5708"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="100" velocity="1"/>
+  </joint>
+
+  <!-- Left lower arm -->
+  <link name="left_lower_arm">
+    <visual>
+      <geometry>
+        <cylinder length="0.35" radius="0.04"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.35" radius="0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.8"/>
+      <inertia ixx="0.008" ixy="0.0" ixz="0.0" iyy="0.008" iyz="0.0" izz="0.0015"/>
+    </inertial>
+  </link>
+
+  <!-- Left elbow joint -->
+  <joint name="left_elbow_joint" type="revolute">
+    <parent link="left_upper_arm"/>
+    <child link="left_lower_arm"/>
+    <origin xyz="0 -0.225 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="100" velocity="1"/>
+  </joint>
+
+  <!-- Right upper arm -->
+  <link name="right_upper_arm">
+    <visual>
+      <geometry>
+        <cylinder length="0.4" radius="0.05"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.4" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Right shoulder joint -->
+  <joint name="right_shoulder_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_upper_arm"/>
+    <origin xyz="-0.2 0 0.1" rpy="0 0 -1.5708"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="100" velocity="1"/>
+  </joint>
+
+  <!-- Right lower arm -->
+  <link name="right_lower_arm">
+    <visual>
+      <geometry>
+        <cylinder length="0.35" radius="0.04"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.35" radius="0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.8"/>
+      <inertia ixx="0.008" ixy="0.0" ixz="0.0" iyy="0.008" iyz="0.0" izz="0.0015"/>
+    </inertial>
+  </link>
+
+  <!-- Right elbow joint -->
+  <joint name="right_elbow_joint" type="revolute">
+    <parent link="right_upper_arm"/>
+    <child link="right_lower_arm"/>
+    <origin xyz="0 -0.225 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="100" velocity="1"/>
+  </joint>
+
+  <!-- Left upper leg -->
+  <link name="left_upper_leg">
+    <visual>
+      <geometry>
+        <cylinder length="0.5" radius="0.06"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.5" radius="0.06"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.04" ixy="0.0" ixz="0.0" iyy="0.04" iyz="0.0" izz="0.003"/>
+    </inertial>
+  </link>
+
+  <!-- Left hip joint -->
+  <joint name="left_hip_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_upper_leg"/>
+    <origin xyz="0.1 -0.05 -0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="200" velocity="1"/>
+  </joint>
+
+  <!-- Left lower leg -->
+  <link name="left_lower_leg">
+    <visual>
+      <geometry>
+        <cylinder length="0.45" radius="0.05"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.45" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.0025"/>
+    </inertial>
+  </link>
+
+  <!-- Left knee joint -->
+  <joint name="left_knee_joint" type="revolute">
+    <parent link="left_upper_leg"/>
+    <child link="left_lower_leg"/>
+    <origin xyz="0 0 -0.25" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="0" effort="200" velocity="1"/>
+  </joint>
+
+  <!-- Right upper leg -->
+  <link name="right_upper_leg">
+    <visual>
+      <geometry>
+        <cylinder length="0.5" radius="0.06"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.5" radius="0.06"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.04" ixy="0.0" ixz="0.0" iyy="0.04" iyz="0.0" izz="0.003"/>
+    </inertial>
+  </link>
+
+  <!-- Right hip joint -->
+  <joint name="right_hip_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_upper_leg"/>
+    <origin xyz="-0.1 -0.05 -0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" effort="200" velocity="1"/>
+  </joint>
+
+  <!-- Right lower leg -->
+  <link name="right_lower_leg">
+    <visual>
+      <geometry>
+        <cylinder length="0.45" radius="0.05"/>
+      </geometry>
+      <material name="light_gray">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.45" radius="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.5"/>
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.0025"/>
+    </inertial>
+  </link>
+
+  <!-- Right knee joint -->
+  <joint name="right_knee_joint" type="revolute">
+    <parent link="right_upper_leg"/>
+    <child link="right_lower_leg"/>
+    <origin xyz="0 0 -0.25" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="0" effort="200" velocity="1"/>
+  </joint>
+
+  <!-- Left foot -->
+  <link name="left_foot">
+    <visual>
+      <geometry>
+        <box size="0.2 0.1 0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.2 0.1 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Left ankle joint -->
+  <joint name="left_ankle_joint" type="fixed">
+    <parent link="left_lower_leg"/>
+    <child link="left_foot"/>
+    <origin xyz="0 0 -0.25"/>
+  </joint>
+
+  <!-- Right foot -->
+  <link name="right_foot">
+    <visual>
+      <geometry>
+        <box size="0.2 0.1 0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.2 0.1 0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+  </link>
+
+  <!-- Right ankle joint -->
+  <joint name="right_ankle_joint" type="fixed">
+    <parent link="right_lower_leg"/>
+    <child link="right_foot"/>
+    <origin xyz="0 0 -0.25"/>
+  </joint>
+
+  <!-- Gazebo plugin for ROS control -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/basic_humanoid</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <!-- Gazebo material definitions -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="head">
+    <material>Gazebo/Yellow</material>
+  </gazebo>
+  <gazebo reference="left_upper_arm">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_lower_arm">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="right_upper_arm">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="right_lower_arm">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_upper_leg">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_lower_leg">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="right_upper_leg">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="right_lower_leg">
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_foot">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="right_foot">
+    <material>Gazebo/Black</material>
+  </gazebo>
+</robot>

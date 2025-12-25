@@ -1,0 +1,93 @@
+.navbar {
+  background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  padding: 0.75rem 0;
+}
+
+.navbarBrand {
+  display: flex;
+  align-items: center;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.roboticsLogo {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-tertiary) 100%);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roboticsLogo::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.navbarTitle {
+  color: var(--ifm-color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, #00e6e6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__items {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar__link {
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.navbar__link:hover {
+  color: var(--ifm-color-primary);
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--ifm-color-primary);
+  transition: width 0.3s ease;
+}
+
+.navbar__link:hover::after {
+  width: 100%;
+}
+
+.navbar__link--active {
+  color: var(--ifm-color-primary);
+}
+
+.navbar__link--active::after {
+  width: 100%;
+}
+
+@media (max-width: 996px) {
+  .navbar__items {
+    display: none;
+  }
+}

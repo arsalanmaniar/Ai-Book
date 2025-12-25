@@ -1,0 +1,133 @@
+# LiDAR Sensor Configuration Example
+# This configuration file defines parameters for a simulated LiDAR sensor
+# Compatible with Gazebo and ROS-based robotics simulation
+
+sensor_type: "ray"
+sensor_model: "HDL-32E"  # Example: Velodyne HDL-32E equivalent
+
+# General parameters
+name: "velodyne_lidar"
+topic: "/velodyne_points"
+frame_id: "velodyne"
+update_rate: 10.0  # Hz
+
+# Ray/LiDAR specific parameters
+ray:
+  scan:
+    horizontal:
+      samples: 1800      # Number of azimuth angle samples
+      resolution: 1      # Azimuth resolution (1 = no interpolation)
+      min_angle: -3.14159265359  # -π (radians) = -180 degrees
+      max_angle: 3.14159265359   # π (radians) = 180 degrees
+    vertical:
+      samples: 32        # Number of elevation angle samples
+      resolution: 1      # Elevation resolution (1 = no interpolation)
+      min_angle: -0.523598775598 # -π/6 (radians) = -30 degrees
+      max_angle: 0.261799387799  # π/12 (radians) = 15 degrees
+
+  range:
+    min: 0.2           # Minimum range (meters)
+    max: 100.0         # Maximum range (meters)
+    resolution: 0.001  # Range resolution (meters)
+
+# Noise parameters for realistic simulation
+noise:
+  type: "gaussian"
+  mean: 0.0
+  stddev: 0.01       # 1cm standard deviation
+
+# Gazebo plugin configuration
+plugin:
+  type: "libgazebo_ros_velodyne_gpu_laser.so"
+  name: "gazebo_ros_velodyne_controller"
+
+  # ROS-specific parameters
+  ros:
+    namespace: "velodyne"
+    topic_name: "velodyne_points"
+    frame_name: "velodyne"
+
+  # Sensor-specific parameters
+  min_range: 0.9       # Minimum range for valid measurements (m)
+  max_range: 130.0     # Maximum range for valid measurements (m)
+  gaussian_noise: 0.01 # Gaussian noise level (m)
+
+  # Visualization parameters
+  visualize: true      # Enable/disable visualization in Gazebo
+
+# Physical mounting parameters
+mounting:
+  position: [0.2, 0.0, 0.3]  # [x, y, z] in robot frame (meters)
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in robot frame (radians)
+
+# Performance parameters
+performance:
+  max_contacts: 10     # Maximum number of contacts per ray
+  output_frame_rate: 10  # Output frame rate (may be lower than update_rate)
+
+# Data processing parameters
+data_processing:
+  point_cloud_topic: "/velodyne_points"
+  laser_scan_topic: "/scan"  # Optional 2D projection
+  intensity_channel: true    # Include intensity information
+  ring_channel: true         # Include ring number information
+
+# Calibration parameters
+calibration:
+  # Intrinsic calibration
+  focal_length: 525.0    # For projection to 2D image if needed
+  principal_point_x: 320.5
+  principal_point_y: 240.5
+
+  # Extrinsic calibration (if applicable)
+  # These would be used to transform to other sensor frames
+  extrinsic_transforms:
+    camera_frame: [0.1, 0.0, 0.05, 0.0, 0.0, 0.0]  # [x, y, z, roll, pitch, yaw]
+    imu_frame: [0.05, 0.0, 0.1, 0.0, 0.0, 0.0]
+
+# Validation parameters
+validation:
+  # Expected performance characteristics
+  expected_fov_horizontal: 360.0    # Expected horizontal field of view (degrees)
+  expected_fov_vertical: 41.34      # Expected vertical field of view (degrees)
+  expected_range_accuracy: 0.01     # Expected range accuracy (meters)
+  expected_angular_accuracy: 0.001  # Expected angular accuracy (radians)
+
+# Simulation-specific overrides
+simulation:
+  # Additional parameters specifically for simulation
+  ray_count_multiplier: 1.0    # Adjust ray count for performance vs quality
+  update_rate_multiplier: 1.0  # Adjust update rate for performance
+  noise_multiplier: 1.0        # Adjust noise level for realism vs performance
+
+# Compatibility settings
+compatibility:
+  ros_version: "noetic"      # ROS version compatibility
+  gazebo_version: "11"       # Gazebo version compatibility
+  point_cloud_format: "PointXYZI"  # Point cloud data format
+
+# Quality of service settings (for ROS 2)
+qos:
+  sensor_data:
+    reliability: "reliable"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 5
+
+# Additional sensor properties
+properties:
+  manufacturer: "Velodyne"
+  model_number: "HDL-32E"
+  weight: 1.57           # Weight in kg
+  power_consumption: 10.0  # Power consumption in watts
+  operating_temperature_range: [-10, 50]  # Operating temperature range (°C)
+  storage_temperature_range: [-20, 70]    # Storage temperature range (°C)
+  protection_rating: "IP67"  # Ingress protection rating
+
+# Notes for implementation
+implementation_notes:
+  - "This configuration simulates a Velodyne HDL-32E LiDAR sensor"
+  - "Adjust range parameters based on actual sensor specifications"
+  - "Modify noise parameters to match real sensor characteristics"
+  - "Update mounting parameters based on robot design"
+  - "Validate performance parameters based on target hardware"

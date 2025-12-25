@@ -1,0 +1,26 @@
+Task: Fix invisible text issue caused by missing theme variables and enable proper light/dark mode
+
+Context:
+This Docusaurus 3.x site uses a custom robotics-themed UI.
+Homepage hero text is invisible unless hovered.
+Root cause identified: required Infima theme variables (heading and base text colors)
+are missing, causing text to render transparent.
+
+Problems to Fix:
+- --ifm-heading-color is not defined
+- --ifm-font-color-base is not defined
+- Hero text inherits transparent color
+- Hover state reveals text unintentionally
+- Light/Dark mode toggle must work correctly
+
+Requirements:
+- Explicitly define --ifm-heading-color and --ifm-font-color-base
+- Set correct readable colors for BOTH light and dark modes
+- Ensure hero title and subtitle are visible without hover
+- Preserve existing robotics animations and layout
+- Enable proper light/dark mode toggle in navbar
+- Fix must be applied in src/css/custom.css and config if needed
+
+Success Criteria:
+- Text visible immediately on page load
+- No hover-based text revea

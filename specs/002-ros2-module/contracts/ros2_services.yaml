@@ -1,0 +1,191 @@
+# ROS 2 Service Contracts: Module 1 "The Robotic Nervous System (ROS 2)"
+
+## Overview
+This document defines the service contracts for educational examples in Module 1. These contracts describe the interfaces that will be used in the practical exercises.
+
+## Service: RobotControl
+
+### Service Definition: `RobotMove`
+**Purpose**: Request the robot to move to a specific position
+
+**Request**:
+```yaml
+# Target position in 2D space
+target_x: float64
+target_y: float64
+target_theta: float64  # orientation in radians
+```
+
+**Response**:
+```yaml
+# Result of the move operation
+success: bool
+message: string
+# Time taken to complete the operation
+execution_time: float64
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+### Service Definition: `RobotGetState`
+**Purpose**: Get the current state of the robot
+
+**Request**:
+```yaml
+# No parameters needed for this request
+```
+
+**Response**:
+```yaml
+# Current position
+current_x: float64
+current_y: float64
+current_theta: float64
+# Current velocity
+linear_velocity: float64
+angular_velocity: float64
+# Battery level percentage
+battery_level: float64
+# Robot status
+status: string  # e.g., "idle", "moving", "error"
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+## Service: SensorInterface
+
+### Service Definition: `GetLaserScan`
+**Purpose**: Request current laser scan data from the robot
+
+**Request**:
+```yaml
+# Range of angles to scan (optional, full range if not specified)
+min_angle: float64
+max_angle: float64
+# Maximum range to consider
+max_range: float64
+```
+
+**Response**:
+```yaml
+# Success status
+success: bool
+# Array of distance measurements
+ranges: float64[]  # Array of distances
+# Array of intensities (optional)
+intensities: float64[]  # Array of intensities
+# Error message if success is false
+error_message: string
+```
+
+**QoS Profile**:
+- Reliability: Reliable
+- Durability: Volatile
+- History: Keep last 1
+
+## Topic Contracts
+
+### Topic: `robot_position`
+**Purpose**: Publish robot position updates
+
+**Message Type**: Custom message based on geometry_msgs/Pose
+
+**Message Definition**:
+```yaml
+# Position coordinates
+x: float64
+y: float64
+z: float64
+# Orientation as quaternion
+orientation_x: float64
+orientation_y: float64
+orientation_z: float64
+orientation_w: float64
+```
+
+**QoS Profile**:
+- Reliability: Best effort (for performance)
+- Durability: Volatile
+- History: Keep last 10
+- Rate: 10 Hz (typically)
+
+### Topic: `sensor_data`
+**Purpose**: Publish sensor readings from the robot
+
+**Message Type**: Custom message with multiple sensor values
+
+**Message Definition**:
+```yaml
+# Timestamp of the reading
+timestamp: time
+# Laser scan data
+laser_ranges: float64[]
+# IMU data
+imu_orientation_x: float64
+imu_orientation_y: float64
+imu_orientation_z: float64
+imu_orientation_w: float64
+# Battery level
+battery_level: float64
+```
+
+**QoS Profile**:
+- Reliability: Best effort
+- Durability: Volatile
+- History: Keep last 5
+- Rate: 5 Hz (typically)
+
+## Action Contracts (Advanced Topic)
+
+### Action: `NavigateToGoal`
+**Purpose**: Navigate the robot to a specific goal with feedback
+
+**Goal**:
+```yaml
+# Target position
+target_x: float64
+target_y: float64
+target_theta: float64
+# Tolerance for reaching the goal
+position_tolerance: float64
+orientation_tolerance: float64
+```
+
+**Result**:
+```yaml
+# Whether the goal was achieved
+success: bool
+# Final position when goal was reached/stopped
+final_x: float64
+final_y: float64
+final_theta: float64
+# Time taken to reach the goal
+time_taken: float64
+# Reason for failure if success is false
+failure_reason: string
+```
+
+**Feedback**:
+```yaml
+# Current position during navigation
+current_x: float64
+current_y: float64
+current_theta: float64
+# Distance remaining to goal
+distance_remaining: float64
+# Estimated time to goal
+estimated_time_to_goal: float64
+# Navigation status
+status: string  # "moving", "repositioning", "obstacle_detected"
+```
+
+**QoS Profile**:
+- Goal: Reliable
+- Result: Reliable
+- Feedback: Best effort

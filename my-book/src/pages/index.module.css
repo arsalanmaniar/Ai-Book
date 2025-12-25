@@ -1,0 +1,302 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+  padding: 6rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ifm-color-emphasis-100) 0%, var(--ifm-color-emphasis-200) 100%);
+  z-index: 1; /* Ensure hero section is above other elements */
+}
+
+[data-theme='dark'] .heroBanner {
+  background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
+}
+
+/* Add animated grid background */
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(rgba(0, 170, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 170, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+  z-index: -1;
+}
+
+@keyframes gridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+/* Glowing accent effect for hero elements */
+.hero__title {
+  position: relative;
+  text-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.hero__title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00aaff, transparent);
+  border-radius: 50%;
+  animation: glowLine 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowLine {
+  from {
+    opacity: 0.3;
+    transform: translateX(-50%) scaleX(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+.heroContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.heroText {
+  flex: 1;
+  text-align: left;
+  max-width: 600px;
+  z-index: 2; /* Ensure text content is above background elements */
+  position: relative;
+}
+
+.heroVisual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  z-index: 2; /* Ensure visual content is above background elements */
+  position: relative;
+}
+
+.roboticIcon {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-tertiary) 100%);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: float 6s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.roboticIcon::before {
+  content: '';
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 3px solid rgba(0, 170, 255, 0.6); /* Enhanced visibility */
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.roboticIcon::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: rgba(0, 230, 230, 0.2); /* Enhanced visibility */
+  border-radius: 50%;
+  animation: rotate 10s linear infinite;
+}
+
+/* Enhanced animations for robotic icon */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    border-color: rgba(0, 170, 255, 0.6);
+  }
+  50% {
+    transform: scale(1.05);
+    border-color: rgba(0, 230, 230, 0.8);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.hero__title {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: var(--ifm-heading-color);
+  text-align: left; /* Changed from center to left for better alignment with content */
+}
+
+.hero__subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  color: var(--ifm-color-emphasis-800); /* Increased contrast */
+  text-align: left; /* Changed from center to left for better alignment with content */
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.button {
+  border-radius: var(--ifm-global-radius);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.button--primary {
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: white;
+}
+
+.button--primary:hover {
+  background-color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button--secondary {
+  background-color: transparent;
+  border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.moduleSection {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.moduleSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00aaff, transparent);
+  opacity: 0.5;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.sectionTitle {
+  color: var(--ifm-color-primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00aaff, transparent);
+  border-radius: 50%;
+}
+
+.sectionSubtitle {
+  color: var(--ifm-color-emphasis-700); /* Increased contrast */
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 3rem 1rem;
+  }
+
+  .heroContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroText {
+    max-width: 100%;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+
+  .hero__title {
+    font-size: 2rem;
+  }
+
+  .moduleSection {
+    padding: 2rem 0;
+  }
+}

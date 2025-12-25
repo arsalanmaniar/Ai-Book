@@ -1,0 +1,110 @@
+.blogHighlightsSection {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.blogHighlightsSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00aaff, transparent);
+  opacity: 0.5;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.sectionTitle {
+  color: var(--ifm-color-primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00aaff, transparent);
+  border-radius: 50%;
+}
+
+.sectionSubtitle {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.blogHighlightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.blogHighlightCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 2px solid;
+  border-color: var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: inherit;
+}
+
+.blogHighlightCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-color: var(--ifm-color-primary);
+}
+
+.blogTitle {
+  color: var(--ifm-color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.blogExcerpt {
+  color: var(--ifm-color-emphasis-700);
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.blogMeta {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 0.9rem;
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 768px) {
+  .blogHighlightsSection {
+    padding: 2rem 0;
+  }
+
+  .blogHighlightsGrid {
+    grid-template-columns: 1fr;
+  }
+}

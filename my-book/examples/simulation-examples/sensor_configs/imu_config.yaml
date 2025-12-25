@@ -1,0 +1,284 @@
+# IMU Sensor Configuration Example
+# This configuration file defines parameters for a simulated Inertial Measurement Unit
+# Compatible with Gazebo and ROS-based robotics simulation
+# Example: Analog Devices ADIS16470 equivalent
+
+sensor_type: "imu"
+sensor_model: "ADIS16470"  # Example: Analog Devices ADIS16470 equivalent
+
+# General parameters
+name: "imu_sensor"
+namespace: "imu"
+update_rate: 200.0  # Hz (High frequency for IMU)
+
+# IMU specific parameters
+imu:
+  # Angular velocity parameters (gyroscope)
+  angular_velocity:
+    # Noise parameters for x-axis gyroscope
+    x:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.0014  # rad/s (Bias instability: ~15 deg/hr)
+        bias_mean: 0.0
+        bias_stddev: 0.01  # rad/s
+    # Noise parameters for y-axis gyroscope
+    y:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.0014  # rad/s
+        bias_mean: 0.0
+        bias_stddev: 0.01  # rad/s
+    # Noise parameters for z-axis gyroscope
+    z:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.0014  # rad/s
+        bias_mean: 0.0
+        bias_stddev: 0.01  # rad/s
+
+    # Gyroscope-specific parameters
+    rate:
+      range: [-2000.0, 2000.0]  # deg/s range
+      resolution: 0.025         # deg/s per LSB
+      bandwidth: 300.0          # Hz -3dB bandwidth
+      bias_stability: 0.0087    # rad/s (0.5 deg/s)
+
+  # Linear acceleration parameters (accelerometer)
+  linear_acceleration:
+    # Noise parameters for x-axis accelerometer
+    x:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.017  # m/s²
+        bias_mean: 0.0
+        bias_stddev: 0.05  # m/s²
+    # Noise parameters for y-axis accelerometer
+    y:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.017  # m/s²
+        bias_mean: 0.0
+        bias_stddev: 0.05  # m/s²
+    # Noise parameters for z-axis accelerometer
+    z:
+      noise:
+        type: "gaussian"
+        mean: 0.0
+        stddev: 0.017  # m/s²
+        bias_mean: 0.0
+        bias_stddev: 0.05  # m/s²
+
+    # Accelerometer-specific parameters
+    range: [-180.0, 180.0]  # m/s² range (18g max)
+    resolution: 0.003       # m/s² per LSB
+    bandwidth: 250.0        # Hz -3dB bandwidth
+    bias_stability: 0.05    # m/s²
+
+  # Orientation parameters (computed from other measurements)
+  orientation:
+    noise:
+      type: "gaussian"
+      mean: 0.0
+      stddev: 0.0005  # rad
+      bias_mean: 0.0
+      bias_stddev: 0.001  # rad
+
+# Gazebo plugin configuration
+plugin:
+  type: "libgazebo_ros_imu.so"
+  name: "gazebo_imu_controller"
+
+  # ROS-specific parameters
+  ros:
+    # Topic names
+    topic_name: "/imu/data"
+    service_name: "/imu/service"
+    magnetic_field_topic_name: "/imu/magnetic_field"  # Optional
+    imu_topic_name: "/imu/data_raw"                   # Optional raw topic
+
+    # Frame names
+    frame_name: "imu_link"
+    body_name: "imu_link"
+
+  # IMU-specific parameters
+  update_rate: 200.0
+  gaussian_noise: 0.0017  # Overall noise level
+
+  # Bias parameters
+  accel_offset: [0.0, 0.0, 0.0]  # Accelerometer bias offset
+  accel_scale: [1.0, 1.0, 1.0]   # Accelerometer scale factor
+  accel_drift: [0.0, 0.0, 0.0]   # Accelerometer drift
+  accel_drift_frequency: [0.0, 0.0, 0.0]  # Accelerometer drift frequency
+  accel_gaussian_noise: [0.017, 0.017, 0.017]  # Accelerometer noise
+
+  rate_offset: [0.0, 0.0, 0.0]   # Gyro bias offset
+  rate_scale: [1.0, 1.0, 1.0]    # Gyro scale factor
+  rate_drift: [0.0, 0.0, 0.0]    # Gyro drift
+  rate_drift_frequency: [0.0, 0.0, 0.0]  # Gyro drift frequency
+  rate_gaussian_noise: [0.0014, 0.0014, 0.0014]  # Gyro noise
+
+  angle_offset: [0.0, 0.0, 0.0]  # Angle bias offset
+  angle_scale: [1.0, 1.0, 1.0]   # Angle scale factor
+  angle_drift: [0.0, 0.0, 0.0]   # Angle drift
+  angle_drift_frequency: [0.0, 0.0, 0.0]  # Angle drift frequency
+  angle_gaussian_noise: [0.0005, 0.0005, 0.0005]  # Angle noise
+
+  # Configuration options
+  initial_orientation_as_reference: false  # Use initial orientation as reference
+  gravity_dir_z: true  # Apply gravity in Z direction
+
+# Physical mounting parameters
+mounting:
+  position: [0.0, 0.0, 0.1]     # [x, y, z] in robot frame (meters)
+  orientation: [0.0, 0.0, 0.0]  # [roll, pitch, yaw] in robot frame (radians)
+
+# Performance parameters
+performance:
+  max_update_rate: 2000.0    # Maximum supported update rate (Hz)
+  min_update_rate: 50.0      # Minimum recommended update rate (Hz)
+  power_consumption: 0.2     # Power consumption in watts
+  processing_latency: 0.001  # Processing latency (seconds)
+
+# Data processing parameters
+data_processing:
+  topic: "/imu/data"
+  frame_id: "imu_link"
+  linear_acceleration_covariance: [0.0004, 0.0, 0.0, 0.0, 0.0004, 0.0, 0.0, 0.0, 0.0004]  # Covariance matrix
+  angular_velocity_covariance: [0.0004, 0.0, 0.0, 0.0, 0.0004, 0.0, 0.0, 0.0, 0.0004]   # Covariance matrix
+  orientation_covariance: [0.001, 0.0, 0.0, 0.0, 0.001, 0.0, 0.0, 0.0, 0.001]          # Covariance matrix
+
+# Calibration parameters
+calibration:
+  # Temperature compensation parameters
+  temperature_coefficients:
+    accel_x_bias: 0.0001     # (m/s²)/°C
+    accel_y_bias: 0.0001     # (m/s²)/°C
+    accel_z_bias: 0.00015    # (m/s²)/°C
+    gyro_x_bias: 0.000001    # (rad/s)/°C
+    gyro_y_bias: 0.000001    # (rad/s)/°C
+    gyro_z_bias: 0.000001    # (rad/s)/°C
+    temperature_bias: 25.0   # Reference temperature (°C)
+
+  # Cross-axis sensitivity
+  cross_axis_sensitivity:
+    accel:
+      x_to_y: 0.001          # Cross-axis sensitivity (unitless)
+      x_to_z: 0.001
+      y_to_x: 0.001
+      y_to_z: 0.001
+      z_to_x: 0.001
+      z_to_y: 0.001
+    gyro:
+      x_to_y: 0.001          # Cross-axis sensitivity (unitless)
+      x_to_z: 0.001
+      y_to_x: 0.001
+      y_to_z: 0.001
+      z_to_x: 0.001
+      z_to_y: 0.001
+
+# Validation parameters
+validation:
+  # Expected performance characteristics
+  expected_bias_stability_gyro: 0.0087  # rad/s (0.5 deg/s)
+  expected_bias_stability_accel: 0.05   # m/s² (5 mg)
+  expected_angular_random_walk: 0.0014  # rad/s/√Hz
+  expected_velocity_random_walk: 0.017  # m/s²/√Hz
+  expected_linearity_gyro: 0.1          # % of range
+  expected_linearity_accel: 0.1         # % of range
+  expected_non_repeatability: 0.0005    # rad
+
+# Simulation-specific overrides
+simulation:
+  # Additional parameters specifically for simulation
+  update_rate_multiplier: 1.0    # Adjust update rate for performance
+  noise_multiplier: 1.0          # Adjust noise level for realism vs performance
+  bias_drift_multiplier: 1.0     # Adjust bias drift for realism
+  temperature_effects_enabled: true  # Enable temperature effect simulation
+
+# Compatibility settings
+compatibility:
+  ros_version: "noetic"            # ROS version compatibility
+  gazebo_version: "11"             # Gazebo version compatibility
+  sensor_msgs_version: "3.0"       # Sensor messages version compatibility
+
+# Quality of service settings (for ROS 2)
+qos:
+  sensor_data:
+    reliability: "reliable"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 10
+
+# Additional sensor properties
+properties:
+  manufacturer: "Analog Devices"
+  model_number: "ADIS16470"
+  weight: 0.015                    # Weight in kg
+  power_consumption: 0.2           # Power consumption in watts
+  operating_temperature_range: [-40, 105]  # Operating temperature range (°C)
+  storage_temperature_range: [-55, 125]    # Storage temperature range (°C)
+  protection_rating: "None"        # Ingress protection rating
+  shock_survival: 2000             # Shock survival (g)
+  vibration_tolerance: 17.0        # Vibration tolerance (g rms)
+
+  # Gyroscope specifications
+  gyro:
+    measurement_range: 2000        # deg/s
+    bandwidth: 300                 # Hz
+    resolution: 0.025              # deg/s per LSB
+    zero_bias_shift: 10            # deg/hr (over life)
+    non_linearity: 0.1             # % of range
+    startup_time: 0.05             # seconds
+
+  # Accelerometer specifications
+  accel:
+    measurement_range: 18          # g (176.4 m/s²)
+    bandwidth: 250                 # Hz
+    resolution: 0.003              # g per LSB (0.0294 m/s² per LSB)
+    zero_bias_shift: 5             # mg (over life)
+    non_linearity: 0.1             # % of range
+    startup_time: 0.01             # seconds
+
+# Advanced features
+advanced_features:
+  self_test_enabled: true          # Enable built-in self test
+  digital_filtering: true          # Enable digital filtering
+  wake_on_motion: false            # Enable wake on motion detection
+  shock_detection: false           # Enable shock detection
+  temperature_sensing: true        # Enable temperature sensing output
+
+# Magnetic field simulation (if magnetometer is included)
+magnetic_field:
+  enabled: false                   # Enable magnetometer simulation
+  reference_field: [22000, 5000, 45000]  # nT [x, y, z] reference magnetic field
+  noise_stddev: 1000               # nT standard deviation for magnetic field noise
+
+# Quality of service for different data streams
+stream_qos:
+  imu_data:
+    reliability: "reliable"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 10
+  magnetic_field:
+    reliability: "best_effort"
+    durability: "volatile"
+    history: "keep_last"
+    depth: 5
+
+# Implementation notes
+implementation_notes:
+  - "This configuration simulates an Analog Devices ADIS16470 IMU"
+  - "Adjust noise parameters based on actual sensor specifications"
+  - "Modify bias parameters to match real sensor characteristics"
+  - "Update mounting parameters based on robot design"
+  - "Consider temperature effects for long-term operation"
+  - "Validate update rate requirements based on application needs"
+  - "Account for mounting position relative to robot center of mass"
+  - "Consider cross-axis sensitivity in precision applications"
